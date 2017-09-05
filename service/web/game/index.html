@@ -1,16 +1,93 @@
-<html><head>
+<html>
+<head>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
   <link href="https://fonts.googleapis.com/css?family=Lato:100|Roboto:100,400" rel="stylesheet">
   <link href="/game/style.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+  var max63p;
+  var time = 60;
+  var timer;
+  var numbers;
+  var numbersSorted;
+  var currentNumber;
+
+  function tick() {
+    $("time val").text(--time + "s");
+    if (time == 5) $("time val").addClass("hurry");
+    if (time == 0) stop();
+  }
+
+  function next() {
+    if (timer == null) timer = setInterval(tick, 1000);
+
+    currentNumber = numbers.shift();
+    $("main").text(currentNumber);
+    $("number val").text(numbers.length);
+    if (numbers.length == 5) $("number val").addClass("hurry");
+    if (numbers.length == 0) stop();
+  }
+
+  function start() {
+    $("#next").click(next);
+    $("#save").click(stop);
+    $("#next").prop('disabled', false);
+    $("#save").prop('disabled', false);
+  }
+
+  function stop() {
+    clearInterval(timer);
+    $("#next").prop('disabled', true);
+    $("#save").prop('disabled', true);
+
+    var value = Math.floor((numbersSorted.lastIndexOf(currentNumber) + 1) * 100/60);
+    var max = numbersSorted[numbersSorted.length-1]
+
+    max63p = Math.floor((numbersSorted.lastIndexOf(max63p) + 1) * 100/60);
+
+    var result = {
+      "time": 60 - time,
+      "value": value,
+      "used": 60 - numbers.length,
+      "max63p": max63p,
+    };
+
+    $("result").text("max:" + max + ", percentyl: " + value);
+    $.post( "/result", JSON.stringify(result))
+    .done(data => console.log("Response:" + data));
+  }
+
+  $.post( "https://api.random.org/json-rpc/1/invoke", JSON.stringify({
+    "jsonrpc": "2.0",
+    "method": "generateGaussians",
+    "params": {
+        "apiKey": "2ed8894f-f888-41ed-9bf6-3cdd2bf6109f",
+        "n": 60,
+        "mean": 51,
+        "standardDeviation": 19,
+        "significantDigits": 2
+    },
+    "id": 1
+}))
+  .done(function( data ) {
+    numbers = data.result.random.data;
+    numbersSorted = numbers.slice(0).sort((a,b)=>a-b);
+    max63p = Math.max(...numbers.slice(22));
+    start();
+  });
+  </script>
 </head>
 <body>
-  <header>Time: 37s</header>
-  <main>28</main>
+  <header>
+    <number>Liczb: <val>60</val></number>
+    <time>Czas: <val>60</val></time>
+  </header>
+  <main>?</main>
+  <result></result>
   <div class="next">
-    <section class="press">
-      <button>next</button>
-    </section>
+      <button id="next" disabled>next</button>
   </div>
   <footer>
-      <button>save</button>
+      <button id="save" disabled>save</button>
   </footer>
 </body></html>

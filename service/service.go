@@ -11,12 +11,14 @@ type Result struct {
 	Time int `json:"time" binding:"exists"`
 	Value int `json:"value" binding:"exists"`
 	Used int `json:"used" binding:"exists"`
+	Max63p int `json:"max63p" binding:"exists"`
 }
 
 type Results struct {
 	Times []int `json:"times" binding:"required"`
 	Values []int `json:"values" binding:"required"`
 	Used []int `json:"used" binding:"required"`
+	Max63p []int `json:"max63p" binding:"exists"`
 }
 
 var results []Result
@@ -38,6 +40,7 @@ func gatherData() Results {
 		data.Times = append(data.Times, v.Time)
 		data.Values = append(data.Values, v.Value)
 		data.Used = append(data.Used, v.Used)
+		data.Max63p = append(data.Max63p, v.Max63p)
 	}
 	return data
 }
@@ -81,5 +84,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.Run(":80") // listen and serve on 0.0.0.0:8080
 }

@@ -40,10 +40,12 @@
       var timesChart = new google.visualization.Histogram(document.getElementById('times'));
       var valuesChart = new google.visualization.Histogram(document.getElementById('values'));
       var usedChart = new google.visualization.Histogram(document.getElementById('used'));
+      var max63pChart = new google.visualization.Histogram(document.getElementById('max63p'));
 
       var timesChartOptions = getChartOptions('Poświęcony czas', 60, 5)
       var valuesChartOptions = getChartOptions('Wybrana wartość (percentyl)', 100, 10)
       var usedChartOptions = getChartOptions('Zużyte liczby', 60, 3)
+      var max63pChartOptions = getChartOptions('Maxymalna wartość (p63)', 100, 10)
 
       setInterval(function(){
         $.getJSON( "/data", function( results ) {
@@ -52,10 +54,12 @@
           var times = getDataTable(results.times, 'Time used');
           var values = getDataTable(results.values, 'Value percentiles');
           var used = getDataTable(results.used, 'Numbers used');
+          var max63p = getDataTable(results.max63p, 'Value percentiles (max63p)');
 
           timesChart.draw(times, timesChartOptions);
           valuesChart.draw(values, valuesChartOptions);
           usedChart.draw(used, usedChartOptions);
+          max63pChart.draw(max63p, max63pChartOptions);
         });
       }, 1000);
     }
@@ -63,6 +67,7 @@
 </head>
 <body>
   <div id="times" style="width: 100%; height: 700px;"></div>
-  <div id="values" style="width: 100%; height: 700px;"></div>
   <div id="used" style="width: 100%; height: 700px;"></div>
+  <div id="values" style="width: 100%; height: 700px;"></div>
+  <div id="max63p" style="width: 100%; height: 700px;"></div>
 </body></html>

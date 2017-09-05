@@ -5,6 +5,7 @@ function send() {
     "time" => mt_rand(15,60),
     "value" => mt_rand(-10,120),
     "used" => mt_rand(1,60),
+    "max63p" => mt_rand(67,100),
   ];
 
   $options = [
