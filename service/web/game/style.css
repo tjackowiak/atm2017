@@ -11,7 +11,7 @@ body {
   grid-template-rows: repeat(10, 1fr);
   grid-gap: 0px;
   width: 100vw;
-  height: 100vh;
+  height: 90vh;
 }
 header {
   /* border-style: solid; */
@@ -32,7 +32,7 @@ main {
   font-family: 'Lato', sans-serif;
   text-align: center;
   vertical-align: middle;
-  line-height: 45vh;
+  line-height: 40vh;
   font-size: 30vh;
   background-color: rgba(214, 220, 232, 0.68);
   color: #3d3d3e;
@@ -73,6 +73,7 @@ button:focus {
 }
 
 button {
+  touch-action: manipulation;
   display: inline-block;
   /* margin: 0 10px 0 0; */
   padding: 15px 20vw;
